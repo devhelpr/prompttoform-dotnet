@@ -43,4 +43,6 @@ app.MapGet("/time", () =>
     };
 }).RequireAuthorization("time");
 
+app.MapGet("/test", () => "This should be public").AllowAnonymous();
+
 app.Run();
