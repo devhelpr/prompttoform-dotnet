@@ -4,7 +4,6 @@ using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//builder.Services.AddAuthentication().AddJwtBearer();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -18,19 +17,22 @@ builder.Services.AddAuthorization(options =>
         .RequireAuthenticatedUser()
         .Build();
 });
+
 builder.Services.AddOpenApi();
 
 builder.Services.AddAuthorizationBuilder()
-  .AddPolicy("time", policy =>
-    policy.RequireAuthenticatedUser());
+    .AddPolicy("time", policy =>
+        policy.RequireAuthenticatedUser());
 
 var app = builder.Build();
 
-app.MapOpenApi().AllowAnonymous(); ;
-
-app.MapScalarApiReference().AllowAnonymous(); ;
-
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapOpenApi().AllowAnonymous();
+app.MapScalarApiReference().AllowAnonymous();
 
 app.MapGet("/time", () =>
 {
