@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,7 +12,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         options.Audience = builder.Configuration["JwtBearer:Audience"];
     });
 
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+{
+    options.FallbackPolicy = new AuthorizationPolicyBuilder()
+        .RequireAuthenticatedUser()
+        .Build();
+});
 builder.Services.AddOpenApi();
 
 builder.Services.AddAuthorizationBuilder()
@@ -22,9 +28,9 @@ builder.Services.AddAuthorizationBuilder()
 
 var app = builder.Build();
 
-app.MapOpenApi();
+app.MapOpenApi().AllowAnonymous(); ;
 
-app.MapScalarApiReference();
+app.MapScalarApiReference().AllowAnonymous(); ;
 
 app.UseHttpsRedirection();
 
