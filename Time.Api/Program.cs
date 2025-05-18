@@ -22,9 +22,7 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddAuthorizationBuilder()
   .AddPolicy("time", policy =>
-        policy
-            .RequireRole("admin")
-            .RequireClaim("scope", "time_api"));
+    policy.RequireAuthenticatedUser());
 
 var app = builder.Build();
 
