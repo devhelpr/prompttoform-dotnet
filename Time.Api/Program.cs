@@ -9,19 +9,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     {
         options.Authority = builder.Configuration["JwtBearer:Authority"];
         options.Audience = builder.Configuration["JwtBearer:Audience"];
-        options.Events = new JwtBearerEvents
-        {
-            OnAuthenticationFailed = ctx =>
-            {
-                Console.WriteLine("AUTH FAILED: " + ctx.Exception.Message);
-                return Task.CompletedTask;
-            },
-            OnChallenge = ctx =>
-            {
-                Console.WriteLine("AUTH CHALLENGE: " + ctx.ErrorDescription);
-                return Task.CompletedTask;
-            }
-        };
     });
 
 builder.Services.AddAuthorization(options =>
